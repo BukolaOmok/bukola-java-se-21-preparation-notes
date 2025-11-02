@@ -39,3 +39,7 @@ public void method1(int i, double d) {
 // Output: A labeled break must target a label of an enclosing statement. The second appears after the for has finished, 
 // so POINT1 no longer encloses that break. The label is out of scope → compile-time error: undefined label: POINT1.
 ```
+
+### Infinite Loops
+If a loop is infinite, the program will continue to run and never terminate unless externally interrupted. No exception
+is thrown for infinite loops in Java.

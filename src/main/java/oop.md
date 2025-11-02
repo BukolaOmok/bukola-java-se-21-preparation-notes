@@ -207,3 +207,35 @@ public class TestClass{
 //Output: java.io.FileNotFoundException Version
 ```
 
+### Object initialization and Constructors
+When an object is initialised with no parameter, the default constructor is called. If there is no default constructor
+provided (either explicitly or implicitly), a compilation error occurs.
+
+```java
+class A {
+    A(int x) {
+        System.out.println("Parameterized constructor");
+    }
+}
+public class Test {
+    public static void main(String[] args) {
+        A a = new A(); // Compilation error: no default constructor in A
+    }
+}
+```
+The exam can try to trick by using a method that looks like a constructor but has a return type, making it a regular method.
+
+```java
+public class TestClass{
+   long l1;
+   public void TestClass(long pLong) { l1 = pLong ; }  //(1)
+   public static void main(String args[]){
+      TestClass a, b ;
+      a = new TestClass();  //(2)
+      b = new TestClass(5);  //(3)
+   }
+}
+// Output: Compilation error at line (3) because TestClass(long pLong) is not a constructor due to the void return type.
+// The method TestClass(long pLong) is treated as a regular method, not a constructor.
+```
+
