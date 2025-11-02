@@ -61,13 +61,3 @@ public static void writeInt(String fileName) throws Exception {
 }
 ```
 
-For reentrant locks, below are some important points to consider:
-1. A reentrant lock allows the same thread to acquire the lock multiple times without causing a deadlock. 
-This is useful in scenarios where a method that holds a lock calls another method that also tries to acquire 
-the same lock.
-2. You can have multiple readers or a single writer at any given time.
-3. If no one is writing → multiple readers can proceed.
-4. If someone is writing → everyone else must wait.
-5. The same readLock() and writeLock() objects are reused across calls.
-6. As with any lock, it is crucial to ensure that locks are released in a finally block to avoid deadlocks.
-
