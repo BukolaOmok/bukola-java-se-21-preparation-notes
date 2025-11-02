@@ -36,3 +36,56 @@ public class TestClass {
 // The null pointer exception thrown in the first catch is not caught by the second catch block. It propagates out of main,
 // and the finally block runs before that happens.
 ```
+### Try with Resources requires AutoCloseable (Compilation Error)
+When a try with resources is used, it must implement AutoCloseable. If it does not, a compilation error occurs.
+
+```java
+public class TestClass {
+    public static void main(String args[]) {
+        try (MyResource res = new MyResource()) {
+            res.doSomething();
+        } catch (Exception e) {
+            System.out.println("Caught exception: " + e.getMessage());
+        }
+    }
+}
+class MyResource /* implements AutoCloseable */ {
+    public void doSomething() {
+        System.out.println("Doing something with the resource.");
+    }
+
+    // Uncommenting the following method will implement AutoCloseable and fix the compilation error.
+    /*
+    @Override
+    public void close() {
+        System.out.println("Closing the resource.");
+    }
+    */
+}
+```
+
+### Autoclosable Variables are Implicitly Final (Compilation Error)
+The autoclosable variables in the try with resources are implicitly final; attempting to reassign them results in a compilation error.
+
+```java
+public class TestClass {
+    public static void main(String args[]) {
+        try (MyResource res = new MyResource()) {
+            res = new MyResource(); // Compilation error: cannot assign a value to final variable res
+            res.doSomething();
+        } catch (Exception e) {
+            System.out.println("Caught exception: " + e.getMessage());
+        }
+    }
+}
+class MyResource implements AutoCloseable {
+    public void doSomething() {
+        System.out.println("Doing something with the resource.");
+    }
+
+    @Override
+    public void close() {
+        System.out.println("Closing the resource.");
+    }
+}
+```

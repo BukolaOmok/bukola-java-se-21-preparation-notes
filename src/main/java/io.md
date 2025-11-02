@@ -37,7 +37,7 @@ public static void copyAppend(String fileName1, String fileName2) throws Excepti
 ```
 
 ### Writing Primitives to a File
-When you are writing with output stream, the method does not take writeInt() or writeDouble() methods, this is only applicable 
+When you are writing with output stream, it does not take writeInt() or writeDouble() methods, this is only applicable 
 for DataOutputStream. Note that the write(int b) method of various binary stream based classes take an int parameter 
 but write only the low 8 bits (i.e. 1 byte) of that integer. DataOutputStream provides methods such as writeInt, 
 writeChar, and writeDouble, for writing complete value of the primitives to a file. So if you want to write an integer 
@@ -60,4 +60,31 @@ public static void writeInt(String fileName) throws Exception {
     }
 }
 ```
+
+### File-Related Exceptions
+BufferedReader itself doesn’t touch the filesystem. The exception that is thrown depends on how you create it:
+
+new BufferedReader(new FileReader("x.txt")) → FileNotFoundException (classic java.io path).
+Files.newBufferedReader(Path.of("x.txt")) → NoSuchFileException (NIO java.nio.file path).
+
+FileInputStream
+new FileInputStream("x.txt") → FileNotFoundException if the file doesn’t exist (or is a directory / no permission).
+
+FileOutputStream
+new FileOutputStream("x.txt") → creates the file if it doesn’t exist.
+Throws FileNotFoundException if the parent directory doesn’t exist, the path is a directory, or no permission.
+
+RandomAccessFile
+Mode "r": file must exist → FileNotFoundException if it doesn’t.
+Mode "rw": will create the file if it doesn’t exist (but still fails with FileNotFoundException if parent dir missing / no permission).
+
+### RandomAccessFile Modes
+RandomAccessFile supports four mode strings:
+1. "r" – read-only. The file must exist. Any write methods throw IOException.
+2. "rw" – read/write. Creates the file if it doesn’t exist (fails if parent dir missing / no permission). 
+Writes are buffered by the OS; metadata flush timing isn’t guaranteed.
+3. "rwd" – read/write with synchronous updates to file content only. Data is flushed, but metadata need not be.
+Middle ground between "rw" and "rws".
+4. "rws" – read/write with synchronous updates to file content and metadata. After each write, the OS is asked to 
+flush both the data and the file’s metadata (size, modified time, etc.) to stable storage. Safest, slowest.
 
