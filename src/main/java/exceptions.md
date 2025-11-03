@@ -111,3 +111,29 @@ public class TestClass {
 } // Output: Caught ExceptionInInitializerError: Exception in static block
 ```
 
+### Try with resources requires explicit type (Compilation Error)
+When trying with resources, the type of the resources must be specified explicitly; using var is not allowed and results in a compilation error.
+You also cannot omit the type or use a resource that is not final or effectively final.
+
+```java
+public class TestClass {
+    public static void main(String args[]) {
+        try (var res = new MyResource()) { // Compilation error: 'var' is not allowed here
+            res.doSomething();
+        } catch (Exception e) {
+            System.out.println("Caught exception: " + e.getMessage());
+        }
+    }
+}
+class MyResource implements AutoCloseable {
+    public void doSomething() {
+        System.out.println("Doing something with the resource.");
+    }
+
+    @Override
+    public void close() {
+        System.out.println("Closing the resource.");
+    }
+}
+```
+

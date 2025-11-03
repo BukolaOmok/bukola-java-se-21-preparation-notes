@@ -19,5 +19,36 @@ For reentrant locks, below are some important points to consider:
 6. As with any lock, it is crucial to ensure that locks are released in a finally block to avoid deadlocks.
 
 
+##### Exception Handling in Synchronized Methods
+If a synchronized method ends up throwing an exception to the caller, the lock acquired by the thread associated with
+this method due to the usage of the synchronized keyword is released automatically. This is important to prevent deadlocks
+in scenarios where an exception occurs within a synchronized method.
+
+```java
+public class SynchronizedExceptionExample {
+    private final Object lock = new Object();
+
+    public void synchronizedMethod() {
+        synchronized (lock) {
+            try {
+                // Some code that may throw an exception
+                throw new RuntimeException("An error occurred");
+            } finally {
+                // The lock will be released automatically when the method exits,
+                // even if an exception is thrown.
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SynchronizedExceptionExample example = new SynchronizedExceptionExample();
+        try {
+            example.synchronizedMethod();
+        } catch (RuntimeException e) {
+            System.out.println("Caught exception: " + e.getMessage());
+        }
+    }
+}
+```
 
 

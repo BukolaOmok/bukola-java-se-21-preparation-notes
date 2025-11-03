@@ -440,5 +440,67 @@ public class ExtendsTest {
 }
 ```
 
+### Superclass Constructor Calling Overridden Method
+If the superclass constructor calls a method that is overridden in the subclass, the subclass version of the method is executed
+```java
+class A {
+    A() {
+        show();
+    }
+
+    void show() {
+        System.out.println("A's show");
+    }
+}
+class B extends A {
+    int x = 10;
+
+    B() {
+        super();
+    }
+
+    void show() {
+        System.out.println("B's show: x = " + x);
+    }
+}
+public class Test {
+    public static void main(String[] args) {
+        B b = new B();
+    }
+}
+// Output: B's show: x = 0
+```
+
+### Calling Grandparent Class Method (Compilation Error)
+You cannot go up more than one level to call a grandparent class method directly using super. The following code will result in a compilation error.
+```java
+class A {
+    void show() {
+        System.out.println("A's show");
+    }
+}
+class B extends A {
+    void show() {
+        System.out.println("B's show");
+    }
+}
+class C extends B {
+    void show() {
+        System.out.println("C's show");
+    }
+
+    void display() {
+        super.super.show(); // Compilation error: cannot use 'super' twice
+    }
+}
+public class Test {
+    public static void main(String[] args) {
+        C c = new C();
+        c.display();
+    }
+} // Output: Compilation error at line with super.super.show() because 'super' can only be used once to refer to the immediate superclass.
+```
+
+
 
 
