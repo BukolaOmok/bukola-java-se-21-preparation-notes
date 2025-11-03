@@ -322,6 +322,7 @@ public class B extends A {
 ```
 
 ### Abstract Method Overriding
+
 An overriding method can be abstract even if the superclass method is not abstract. So far the subclass is declared
 as abstract
 
@@ -331,18 +332,22 @@ abstract class A {
         System.out.println("A's show");
     }
 }
+
 abstract class B extends A {
     abstract void show(); // valid override
 }
 ```
 
-An interface cannot be instantiated directly. A class that implements an interface must provide concrete implementations for all of its methods,
-unless the class is declared as abstract. However, an anonymous class can implement an interface and provide implementations for its methods.
+An interface cannot be instantiated directly. A class that implements an interface must provide concrete implementations
+for all of its methods,
+unless the class is declared as abstract. However, an anonymous class can implement an interface and provide
+implementations for its methods.
 
 ```java
 interface MyInterface {
     void display();
 }
+
 public class Test {
     public static void main(String[] args) {
         MyInterface obj = new MyInterface() {
@@ -355,3 +360,85 @@ public class Test {
     }
 }
 ```
+
+### Virtual Calls
+
+A virtual call (or virtual method invocation) is a runtime method call that uses dynamic dispatch to determine which
+implementation to execute — that is, the method chosen depends on the actual object’s type, not the reference’s
+declared type. In simple terms, a virtual call is when Java decides at runtime which version of an instance method to
+run.
+
+```java
+class A {
+    void show() {
+        System.out.println("A.show");
+    }
+}
+
+class B extends A {
+    void show() {
+        System.out.println("B.show");
+    }
+}
+
+public class Test {
+    public static void main(String[] args) {
+        A ref = new B();   // reference type A, object type B
+        ref.show();        // prints "B.show"
+    }
+} // The compiler sees ref as type A, but at runtime it checks the actual object (B) and calls B.show().
+```
+
+Calls are classified as virtual or non-virtual based on the method being called:
+
+1. Instance methods (non-private, non-static, non-final) → virtual.
+2. Constructors, private methods, static methods, and final methods → non-virtual (the call target is known at compile
+   time).
+
+It matters because virtual calls support polymorphism, allowing subclasses to provide specific implementations for
+methods
+
+### Anonymous Classes in Static Contexts
+
+An anonymous class can never be static even if defined inside a static context. This is because anonymous classes are
+inherently tied to an instance of the enclosing class.
+
+```java
+public class Test {
+    static {
+        MyInterface obj = new MyInterface() { // valid
+            @Override
+            public void display() {
+                System.out.println("Anonymous class implementation");
+            }
+        };
+        obj.display(); // Output: Anonymous class implementation
+    }
+}
+```
+
+### ClassCastException when types are incompatible
+Runtime exception is thrown if you attempt to cast an object to a type that it is not an instance of.
+
+```java
+class B {
+}
+
+class B1 extends B {
+}
+
+class B2 extends B {
+}
+
+public class ExtendsTest {
+    public static void main(String args[]) {
+        B b = new B();
+        B1 b1 = new B1();
+        B2 b2 = new B2();
+        b1 = (B1) b; // Throws ClassCastException at runtime
+    }
+}
+```
+
+
+

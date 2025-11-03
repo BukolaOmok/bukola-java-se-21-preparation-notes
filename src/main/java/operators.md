@@ -82,6 +82,16 @@ public class WrapperCachingNew {
 Note that the following will not compile though:
 ```java
 Byte b = 1; Integer i = 1; 
-b == i; //Invalid because both operands are of different class.
+//b == i; //Invalid because both operands are of different class.
+```
+
+### var in Compound Declarations
+var is not allowed in compound declarations.  So, var i=0, j=10; is invalid. 
+```java
+public class VarCompoundDeclaration {
+    public static void main(String[] args) {
+        var i = 0, j = 10; // Compilation error: 'var' is not allowed in compound declarations
+    }
+}
 ```
 

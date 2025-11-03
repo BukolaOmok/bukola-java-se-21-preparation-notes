@@ -16,3 +16,91 @@ TreeSet does implement SequencedCollection but since a TreeSet keeps its element
 methods throw UnsupportedOperationException.  Note that its getFirst, getLast, removeFirst, removeLast methods work fine.
 
 //Add example
+
+### ClassCastException in TreeSet
+For tree sets when you need to add elements, you should make sure that a comparator is provided either at the time of
+creation of the tree set or the elements added should implement Comparable interface. If this is not the case, a
+ClassCastException will be thrown at runtime.
+
+```java
+import java.util.TreeSet;
+public class TreeSetExample {
+    public static void main(String[] args) {
+        // Creating a TreeSet without a comparator
+        TreeSet<Object> treeSet = new TreeSet<>();
+
+        try {
+            // Attempting to add elements that do not implement Comparable
+            treeSet.add(new Object());
+            treeSet.add(new Object());
+        } catch (ClassCastException e) {
+            System.out.println("ClassCastException: " + e.getMessage());
+        }
+    }
+}
+```
+
+### Null Keys and Values in HashMap and TreeMap
+If a HashMap already contains an entry for the specified key, the old value is replaced by the specified value and
+the old value is returned. If the key was not already present, null is returned.
+
+```java
+import java.util.HashMap;
+public class HashMapExample {
+    public static void main(String[] args) {
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // Adding a new key-value pair
+        Integer oldValue1 = map.put("key1", 100);
+        System.out.println("Old Value for key1: " + oldValue1); // Output: null
+
+        // Replacing the value for the existing key
+        Integer oldValue2 = map.put("key1", 200);
+        System.out.println("Old Value for key1: " + oldValue2); // Output: 100
+    }
+}
+```
+Additionally, hash maps allow null keys and null values. A hash map can have one null key and multiple null values.
+
+```java
+import java.util.HashMap;
+public class HashMapNullExample {
+    public static void main(String[] args) {
+        HashMap<String, Integer> map = new HashMap<>();
+
+        // Adding a null key
+        map.put(null, 100);
+        System.out.println("Value for null key: " + map.get(null)); // Output: 100
+
+        // Adding multiple null values
+        map.put("key1", null);
+        map.put("key2", null);
+        System.out.println("Value for key1: " + map.get("key1")); // Output: null
+        System.out.println("Value for key2: " + map.get("key2")); // Output: null
+    }
+}
+```
+Treemap on the other hand does not allow null keys but allows multiple null values. If you try to add a null key,
+a NullPointerException is thrown.
+
+```java
+import java.util.TreeMap;
+public class TreeMapNullExample {
+    public static void main(String[] args) {
+        TreeMap<String, Integer> map = new TreeMap<>();
+
+        try {
+            // Attempting to add a null key
+            map.put(null, 100);
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException: " + e.getMessage());
+        }
+
+        // Adding multiple null values
+        map.put("key1", null);
+        map.put("key2", null);
+        System.out.println("Value for key1: " + map.get("key1")); // Output: null
+        System.out.println("Value for key2: " + map.get("key2")); // Output: null
+    }
+}
+```

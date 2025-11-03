@@ -89,3 +89,25 @@ class MyResource implements AutoCloseable {
     }
 }
 ```
+
+### Handling Exceptions in Static Blocks
+Exception in static block is propagated as ExceptionInInitializerError with cause set to the original exception.
+Additionally checked exceptions in static blocks must be caught or declared, otherwise a compilation error occurs.
+```java
+public class TestClass {
+    static {
+        if (true) {
+            throw new RuntimeException("Exception in static block");
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            TestClass tc = new TestClass();
+        } catch (ExceptionInInitializerError e) {
+            System.out.println("Caught ExceptionInInitializerError: " + e.getCause().getMessage());
+        }
+    }
+} // Output: Caught ExceptionInInitializerError: Exception in static block
+```
+
