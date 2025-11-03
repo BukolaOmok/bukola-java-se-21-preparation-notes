@@ -104,3 +104,30 @@ public class TreeMapNullExample {
     }
 }
 ```
+
+### Null Keys and Values in ConcurrentHashMap
+In concurrent hash maps (ConcurrentHashMap), null keys and null values are not allowed. Attempting to add a null key or
+null value will result in a NullPointerException.
+
+```java
+import java.util.concurrent.ConcurrentHashMap;
+public class ConcurrentHashMapNullExample {
+    public static void main(String[] args) {
+        ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>();
+
+        try {
+            // Attempting to add a null key
+            map.put(null, 100);
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException for null key: " + e.getMessage());
+        }
+
+        try {
+            // Attempting to add a null value
+            map.put("key1", null);
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException for null value: " + e.getMessage());
+        }
+    }
+}
+```

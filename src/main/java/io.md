@@ -97,3 +97,34 @@ RandomAccessFile supports four mode strings:
 4. "rws" – read/write with synchronous updates to file content and metadata. After each write, the OS is asked to
    flush both the data and the file’s metadata (size, modified time, etc.) to stable storage. Safest, slowest.
 
+### Serialization and Deserialization Constructor Behavior
+When deserialising the constructor of the class that is being deserialized is not called. It calls the constructors of the
+first non-serializable superclass. An exception to this is for record classes, where the canonical constructor is called during
+deserialization even though the record implements Serializable.
+
+```java
+import java.io.Serializable;
+class Parent {
+    Parent() {
+        System.out.println("Parent Constructor Called");
+    }
+}
+class Child extends Parent implements Serializable {
+    Child() {
+        System.out.println("Child Constructor Called");
+    }
+}
+public class TestClass {
+    public static void main(String[] args) throws Exception {
+        Child child = new Child();
+        // Serialize the child object
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("child.ser"))) {
+            oos.writeObject(child);
+        }
+        // Deserialize the child object
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("child.ser"))) {
+            Child deserializedChild = (Child) ois.readObject();
+        }
+    }
+}
+```

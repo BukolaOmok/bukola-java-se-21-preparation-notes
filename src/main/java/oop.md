@@ -501,6 +501,22 @@ public class Test {
 } // Output: Compilation error at line with super.super.show() because 'super' can only be used once to refer to the immediate superclass.
 ```
 
+### Enums inside Methods cannot have access modifiers
+Enums can be defined inside methods including static methods. They however cannot have access modifiers like public, private or protected.
+```java
+public class Test {
+    public static void main(String[] args) {
+        enum Day {
+            SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+        }
+
+        Day today = Day.MONDAY;
+        System.out.println("Today is: " + today);
+    }
+}
+// Output: Today is: MONDAY
+```
+
 
 
 

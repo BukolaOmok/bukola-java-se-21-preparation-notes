@@ -137,3 +137,21 @@ class MyResource implements AutoCloseable {
 }
 ```
 
+### Exception in finally block suppresses previous exceptions
+When an exception is thrown in the finally block, it suppresses any exception thrown in the try or catch blocks.
+
+```java
+public class TestClass {
+    public static void main(String args[]) {
+        try {
+            throw new RuntimeException("Exception in try block");
+        } catch (Exception e) {
+            System.out.println("Caught exception: " + e.getMessage());
+        } finally {
+            throw new RuntimeException("Exception in finally block");
+        }
+    }
+}
+// Output: Uncaught exception: Exception in finally block
+```
+
