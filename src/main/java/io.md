@@ -128,3 +128,34 @@ public class TestClass {
     }
 }
 ```
+
+### File Size when Writing Characters
+When you write characters to a file using FileWriter or PrintWriter, the size of the file depends on the character encoding used.
+For FileWriter, the size of the file depends on the default character encoding of the platform. For example, if the default character encoding is UTF-8,
+then each character may take 1 to 4 bytes depending on the character. If you write ASCII characters, each character will take 1 byte.
+
+```java
+public static void writeCharacters(String fileName) throws Exception {
+    try (FileWriter writer = new FileWriter(fileName)) {
+        writer.write("Hello, World!"); // 13 characters
+    }
+} //
+```
+
+###  PrintWriter Error Handling
+Printwriter's methods do not throw IO exception as they supress the errors internally. You can check for errors using checkError() method.
+All it's write and print method return void so they cannot be assigned to a variable. Additionally the println and printf methods are different in that
+in printf allows for channing (i.e. you can call another method on the returned PrintWriter object) whereas println does not allow for chaining.
+The reason is that printf returns the PrintWriter object itself whereas println returns void.
+```java
+public static void writeWithPrintWriter(String fileName) {
+    try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
+        pw.println("Hello, World!");
+        if (pw.checkError()) {
+            System.out.println("An error occurred while writing to the file.");
+        }
+    } catch (IOException e) {
+        System.out.println("IOException: " + e.getMessage());
+    }
+}
+```

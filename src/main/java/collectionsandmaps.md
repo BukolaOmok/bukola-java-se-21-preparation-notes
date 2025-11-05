@@ -131,3 +131,42 @@ public class ConcurrentHashMapNullExample {
     }
 }
 ```
+
+### Sublist Backed by Original List
+When creating a sublist from a list using the subList() method, the returned sublist is backed by the original list.
+If you modify the original list (e.g., adding or removing elements), the sublist may become invalid and throw a
+ConcurrentModificationException when you try to access or modify it. However, modifying the elements in the sublist itself
+(e.g., setting values) is allowed and will be reflected in the original list.
+
+```java 
+import java.util.ArrayList;
+import java.util.List;
+public class SubListExample {
+    public static void main(String[] args) {
+        List<String> originalList = new ArrayList<>();
+        originalList.add("A");
+        originalList.add("B");
+        originalList.add("C");
+        originalList.add("D");
+
+        // Creating a sublist from index 1 to 3 (exclusive)
+        List<String> subList = originalList.subList(1, 3);
+        System.out.println("Sublist before modification: " + subList); // Output: [B, C]
+
+        // Modifying the original list
+        originalList.add("E");
+
+        try {
+            // Attempting to access the sublist after modifying the original list
+            System.out.println("Sublist after modification: " + subList);
+        } catch (ConcurrentModificationException e) {
+            System.out.println("ConcurrentModificationException: " + e.getMessage());
+        }
+
+        // Modifying elements in the sublist
+        subList.set(0, "X");
+        System.out.println("Sublist after setting value: " + subList); // Output: [X, C]
+        System.out.println("Original list after modifying sublist: " + originalList); // Output: [A, X, C, D, E]
+    }
+}
+```

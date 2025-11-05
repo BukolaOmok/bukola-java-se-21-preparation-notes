@@ -517,6 +517,41 @@ public class Test {
 // Output: Today is: MONDAY
 ```
 
+### Understanding Multiple Inheritance
+Multiple inheritance of implementation is the ability of a class to inherit method implementations from more than one superclass.
+Multiple inheritance of state is the ability of a class to inherit instance variables from more than one superclass.
+Multiple inheritance of types is the ability of a class to inherit type definitions from more than one superclass or interface.
+Java does not support multiple inheritance of implementation or state through classes to avoid ambiguity and complexity.
+However, Java does support multiple inheritance of types through interfaces, allowing a class to implement multiple interfaces.
+But, it does not support multiple inheritance of types through classes, meaning a class cannot extend more than one class.
 
 
+#### Invoking Static Methods from Interface and Class
+To invoke the static method from an interface, you need to use the interface name followed by the method name. It cannot 
+be invoked using an instance of the interface or a class that implements the interface.
+On the other hand to invoke the static method from a class, you can use either the class name or an instance of the class.
 
+```java
+interface MyInterface {
+    static void staticMethod() {
+        System.out.println("Static method in interface");
+    }
+}
+class MyClass {
+    static void staticMethod() {
+        System.out.println("Static method in class");
+    }
+    public static void main(String[] args) {
+        // Invoking static method from interface
+        MyInterface.staticMethod(); // Correct way
+
+        // Invoking static method from class
+        MyClass.staticMethod(); // Using class name
+        MyClass myClassInstance = new MyClass();
+        myClassInstance.staticMethod(); // Using instance
+    }
+}
+// Output:
+// Static method in interface
+// Static method in class
+```
