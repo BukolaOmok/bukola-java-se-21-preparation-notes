@@ -77,3 +77,38 @@ public class JoiningCollectorExample {
 ### Primitive Specialised Streams
 All primitive specialised versions of streams helps to avoid the additional overhead of boxing and unboxing that occurs when using the generic Stream<T> with wrapper classes like Integer, Double, etc.
 They take what is in front of them as argument but they return any type. e.g IntStream takes int as argument but can return long, double or any object type when used with mapToLong, mapToDouble or mapToObj methods respectively.
+
+
+### Difference between takeWhile and dropWhile in Java Streams
+Take while and drop while are short-circuiting operations that work based on a predicate. Both operations process elements of the stream until a certain condition is met, but they behave differently:
+1. takeWhile(Predicate<? super T> predicate): This operation returns a stream consisting of the longest prefix of elements that match the given predicate. 
+It processes elements from the beginning of the stream and includes them in the resulting stream as long as they satisfy the predicate. 
+Once an element is encountered that does not match the predicate, the operation stops processing further elements, and those elements are excluded from the result.
+2. dropWhile(Predicate<? super T> predicate): This operation returns a stream consisting of the remaining elements after dropping the longest prefix of elements that match the given predicate.
+It processes elements from the beginning of the stream and skips them as long as they satisfy the predicate. 
+Once an element is encountered that does not match the predicate, the operation stops skipping further elements, and all subsequent elements are included in the result.
+
+The main difference between takeWhile and dropWhile is that takeWhile includes elements that match the predicate until the first non-matching element is found,
+while dropWhile excludes elements that match the predicate until the first non-matching element is found.
+
+```java
+import java.util.List;
+import java.util.stream.Collectors;
+public class TakeDropWhileExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = List.of(2, 4, 6, 7, 8, 10);
+
+        // Using takeWhile to get even numbers until the first odd number
+        List<Integer> taken = numbers.stream()
+                .takeWhile(n -> n % 2 == 0)
+                .toList();
+        System.out.println("Taken: " + taken); // Output: [2, 4, 6]
+
+        // Using dropWhile to skip even numbers until the first odd number
+        List<Integer> dropped = numbers.stream()
+                .dropWhile(n -> n % 2 == 0)
+                .toList();
+        System.out.println("Dropped: " + dropped); // Output: [7, 8, 10]
+    }
+}
+```

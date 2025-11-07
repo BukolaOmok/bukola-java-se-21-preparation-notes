@@ -604,3 +604,42 @@ class MyClass implements InterfaceA, InterfaceB {
     }
 }
 ```
+
+### Static References and Garbage Collection
+For garbage collection. If it is pointed to by static variable, it will not be eligible for garbage collection until the class is unloaded.
+
+```java
+class MyClass {
+    static MyClass instance = new MyClass();
+
+    public static void main(String[] args) {
+        MyClass obj = instance; // obj references the static instance
+        instance = null; // Now the static reference is null
+
+        // At this point, obj is still referencing the MyClass instance,
+        // so it is not eligible for garbage collection.
+    }
+}
+```
+
+### Accessing Non-static Variables in Initializer Blocks
+Non-static variables can be accessed from both a static and non static initializer block. Non-static variables on the other hand, cannot be accessed directly in static initializer blocks.
+
+```java
+public class Test {
+    int nonStaticVar = 10; // Non-static variable
+
+    static {
+        // System.out.println(nonStaticVar); // Compilation error: cannot access non-static variable from static context
+    }
+
+    {
+        System.out.println(nonStaticVar); // Valid: can access non-static variable from non-static initializer block
+    }
+
+    public static void main(String[] args) {
+        new Test(); // This will trigger the non-static initializer block
+    }
+}
+// Output: 10
+```

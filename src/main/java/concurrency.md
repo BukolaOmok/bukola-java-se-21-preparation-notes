@@ -51,4 +51,19 @@ public class SynchronizedExceptionExample {
 }
 ```
 
+### Thread States and InterruptedException in Java
+Threads can be in one of the following states:
+- New: A thread that has been created but not yet started.
+- Runnable: A thread that is ready to run and is waiting for CPU time.
+- Blocked: A thread that is waiting for a monitor lock to enter a synchronized block/method.
+- Waiting: A thread that is waiting indefinitely for another thread to perform a particular action.
+- Timed Waiting: A thread that is waiting for another thread to perform an action for a specified amount of time.
+- Terminated: A thread that has completed its execution.
+
+When you interrupt a thread that is in the following states, the corresponding exceptions are thrown:
+- Blocked: InterruptedException is thrown when the thread is waiting to acquire a monitor lock.
+- Waiting: InterruptedException is thrown when the thread is waiting indefinitely.
+- Timed Waiting: InterruptedException is thrown when the thread is waiting for a specified amount of time.
+- Runnable/New: No exception is thrown when a thread in these states is interrupted. The interrupt status of the thread is set to true, and it can be checked using the isInterrupted() method or the static interrupted() method of the Thread class.
+- Terminated: No exception is thrown when a thread in this state is interrupted, as the thread has already completed its execution.
 

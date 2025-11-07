@@ -98,3 +98,19 @@ public class TestClass {
     }
 } // It prints nothing because there are no case statements, only labels.
 ```
+
+### Combining Other Case Labels with Default Label (Compilation Error)
+For regular switch statements or expressions, other case label cannot be combined with default label. This will cause compilation error. Only in 
+pattern matching switch statements, a null case label can be combined with default label.
+
+```java
+public class TestClass {
+        public int switchTest(byte x){    
+            return switch(x){ 
+            case 'b', 'c' -> 10;       
+            case -2 -> 20;           
+            case 80, default  -> 30;    
+            }; 
+        }
+}
+```
