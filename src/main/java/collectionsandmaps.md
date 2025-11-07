@@ -170,3 +170,37 @@ public class SubListExample {
     }
 }
 ```
+
+### of() and copyOf() Methods with Null Elements
+The of() and copyof() methods do not allow null elements. Attempting to create a list, set, or map with null 
+elements using these methods will result in a NullPointerException. 
+
+```java
+import java.util.List;
+import java.util.Set;
+import java.util.Map;
+public class OfCopyOfNullExample {
+    public static void main(String[] args) {
+        try {
+            // Attempting to create a list with a null element
+            List<String> list = List.of("A", null, "C");
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException for List.of: " + e.getMessage());
+        }
+
+        try {
+            // Attempting to create a set with a null element
+            Set<String> set = Set.of("A", null, "C");
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException for Set.of: " + e.getMessage());
+        }
+
+        try {
+            // Attempting to create a map with a null key
+            Map<String, Integer> map = Map.of("A", 1, null, 2);
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException for Map.of: " + e.getMessage());
+        }
+    }
+}
+```

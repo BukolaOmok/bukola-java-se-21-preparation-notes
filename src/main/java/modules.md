@@ -20,6 +20,7 @@ module my.module2 { // Compilation error: multiple module declarations in one fi
 }
 ```
 
+### Using jdeps, java --show-module-resolution, java --describe-module, and jmod describe for Module and Class Dependencies
 For identifying class and module dependencies, you can use the `jdeps` tool provided with the JDK. 
 This tool analyzes class files and module dependencies, helping you understand the relationships between different 
 modules and classes in your Java application.
@@ -44,3 +45,20 @@ For identifying class and module dependencies, you can use jmod describe command
 ```bash
 jmod describe mods/my.module.jmod
 ```
+
+### Bottom-up and top-down approaches to module design
+When designing modules in Java, you can take either a bottom-up or top-down approach:
+- Bottom up approach involves modularising by starting with the module with the least dependencies and building up to the module with the most dependencies.
+For instance, if you have three modules A, B, and C where A depends on B and B depends on C, you would start by designing module C first, then module B, and finally module A.
+The modules move from unnamed to named module as dependencies are added.
+
+Top down modularisation involves the modularisation of the whole application at once. All modules become automatic modules initially and then are converted to named modules as required.
+
+### Automatic Modules, Unnamed and Named Modules
+In Java, modules can be classified into three types: automatic modules, unnamed modules, and named modules.
+- Automatic Modules: These are modules that are created automatically by the Java module system when a JAR file is placed on the module path without a module-info.java file.
+Automatic modules can read all other modules and export all their packages, making them less restrictive than named modules.
+- Unnamed Modules: These are modules that are created when classes are placed on the classpath instead of the module path.
+Unnamed modules can read all other modules but do not have a module name and cannot be read by named modules.
+- Named Modules: These are modules that are explicitly defined using a module-info.java file. Named modules have a specific name and can define their dependencies and exported packages.
+NNamed modules can read other named modules and automatic modules, but not unnamed modules.

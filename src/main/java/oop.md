@@ -555,3 +555,52 @@ class MyClass {
 // Static method in interface
 // Static method in class
 ```
+
+### Clone is final in Enums
+The clone object in enums are final and cannot be overridden.
+```java
+enum MyEnum {
+    INSTANCE;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone(); // Compilation error: cannot override final method
+    }
+}
+```
+
+### Uninitialised Enums require no-argument constructor
+Uninitialised enums need a no arguement constructor otherwise a compilation error occurs.
+```java
+enum MyEnum {
+    INSTANCE;
+
+    MyEnum(int value) { // Compilation error: enum types must have a no-argument constructor
+    }
+}
+```
+
+If a class implements two interfaces that have default methods with the same signature and one does not extend th other, the class must override the method to resolve the conflict.
+If one interface extends the other, the subclass inherits the default method from the parent interface if overriden correctly.
+```java
+interface InterfaceA {
+    default void display() {
+        System.out.println("InterfaceA display");
+    }
+}
+interface InterfaceB {
+    default void display() {
+        System.out.println("InterfaceB display");
+    }
+}
+class MyClass implements InterfaceA, InterfaceB {
+    @Override
+    public void display() { // Must override to resolve conflict
+        InterfaceA.super.display(); // Call InterfaceA's default method
+    }
+    public static void main(String[] args) {
+        MyClass obj = new MyClass();
+        obj.display(); // Output: InterfaceA display
+    }
+}
+```

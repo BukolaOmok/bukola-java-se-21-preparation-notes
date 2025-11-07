@@ -35,3 +35,17 @@ public static void main(String[] args) {
 }
 ```
 
+Resource bundle expects the bundle name and not the file name. Using the file name instead of bundle name will cause MissingResourceException at runtime.
+```java
+public static void main(String[] args) {
+    ResourceBundle rb = ResourceBundle.getBundle("messages"); // Correct: use bundle name without .properties
+    System.out.println(rb.getString("greet")); // "Hello" or "Bonjour" based on default locale
+}
+```
+```java
+public static void main(String[] args) {
+    ResourceBundle rb = ResourceBundle.getBundle("/user/home/messages"); // Incorrect: will throw MissingResourceException
+    System.out.println(rb.getString("greet"));
+}
+```
+

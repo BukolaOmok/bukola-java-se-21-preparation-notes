@@ -100,3 +100,16 @@ public class ArrayMismatchExample {
 }
 ```
 
+### No Arguments Passed to Main Method is 0 not null
+If no argument is passed when a program is run, the args array in the main method will have a length of 0 and will not be null.
+
+```java
+public class NoArgsExample {
+    public static void main(String[] args) {
+        System.out.println("Length of args: " + args.length); // Output: 0
+        System.out.println("Is args null? " + (args == null)); // Output: false
+    }
+}
+```
+
+
