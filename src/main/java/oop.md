@@ -92,14 +92,11 @@ Note the below points for method overidding:
 1. This behaviour is applicable only to instance methods. Static methods cannot be overridden; they can only be hidden.
 2. The method signature (name and parameters) must be the same in both the superclass and subclass.
 3. The access level of the overriding method in the subclass must be the same or more permissive than that of the method
-   in
-   the superclass.
+   in the superclass.
 4. The overriding method can throw no exceptions or a subset of the checked exceptions thrown by the overridden
-   method. (meaning
-   it cannot throw new or broader checked exceptions). It can throw any unchecked exceptions.
+   method. (meaning it cannot throw new or broader checked exceptions). It can throw any unchecked exceptions.
 5. The return type of the overriding method must be the same or a subtype (covariant return type) of the return type of
-   the
-   overridden method.
+   the overridden method.
 
 Note that for private, static, and final methods, overriding is not possible. In such cases, the method in the subclass
 is treated as a new method, not an override.
@@ -123,7 +120,7 @@ public static void main(String[] args) {
 }
 ```
 
-### Accessing Overridden Methods
+### Accessing fields and methods in Superclass
 
 You can access the overridden method in the superclass using the `super` keyword within the subclass. This allows you to
 call the superclass version of the method from the subclass.
@@ -338,9 +335,9 @@ abstract class B extends A {
 }
 ```
 
+### Interfaces cannot be instantiated directly
 An interface cannot be instantiated directly. A class that implements an interface must provide concrete implementations
-for all of its methods,
-unless the class is declared as abstract. However, an anonymous class can implement an interface and provide
+for all of its abstract methods, unless the class is declared as abstract. However, an anonymous class can implement an interface and provide
 implementations for its methods.
 
 ```java
@@ -580,7 +577,8 @@ enum MyEnum {
 }
 ```
 
-If a class implements two interfaces that have default methods with the same signature and one does not extend th other, the class must override the method to resolve the conflict.
+### 
+If a class implements two interfaces that have default methods with the same signature and one does not extend the other, the class must override the method to resolve the conflict.
 If one interface extends the other, the subclass inherits the default method from the parent interface if overriden correctly.
 ```java
 interface InterfaceA {
@@ -622,8 +620,8 @@ class MyClass {
 }
 ```
 
-### Accessing Non-static Variables in Initializer Blocks
-Non-static variables can be accessed from both a static and non static initializer block. Non-static variables on the other hand, cannot be accessed directly in static initializer blocks.
+### Accessing Static and Non-static Variables in Initializer Blocks
+Static variables can be accessed from both a static and non static initializer block. Non-static variables on the other hand, cannot be accessed directly in static initializer blocks.
 
 ```java
 public class Test {
