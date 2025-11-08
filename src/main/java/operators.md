@@ -95,3 +95,16 @@ public class VarCompoundDeclaration {
 }
 ```
 
+When two characters are added together, they are promoted to int before the addition takes place and the result is an int.
+This is the same for char + int.
+```java
+public class CharAddition {
+    public static void main(String[] args) {
+        char c1 = 'A'; // ASCII value 65
+        char c2 = 'B'; // ASCII value 66
+        int sum = c1 + c2; // Promoted to int before addition
+        System.out.println("Sum of 'A' and 'B': " + sum); // Output: 131
+    }
+}
+```
+

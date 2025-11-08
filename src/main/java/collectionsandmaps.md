@@ -171,7 +171,7 @@ public class SubListExample {
 }
 ```
 
-### of() and copyOf() Methods with Null Elements
+### of() and copyOf() Methods do not allow Null Elements
 The of() and copyof() methods do not allow null elements. Attempting to create a list, set, or map with null 
 elements using these methods will result in a NullPointerException. 
 
@@ -205,3 +205,22 @@ public class OfCopyOfNullExample {
 }
 ```
 
+### Keys in TreeMap must be Mutually Comparable
+The keys of a treemap must be mutually comparable. If you try to add keys that are not comparable, a ClassCastException will be thrown at runtime.
+
+```java
+import java.util.TreeMap;
+public class TreeMapClassCastExample {
+    public static void main(String[] args) {
+        TreeMap<Object, String> treeMap = new TreeMap<>();
+
+        try {
+            // Attempting to add keys that are not mutually comparable
+            treeMap.put(1, "One");
+            treeMap.put("Two", "Two");
+        } catch (ClassCastException e) {
+            System.out.println("ClassCastException: " + e.getMessage());
+        }
+    }
+}
+```
