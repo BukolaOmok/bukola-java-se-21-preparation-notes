@@ -17,3 +17,15 @@ class MyClass {
     // No toString() method implemented
 }
 ```
+
+When you use + with a string whatever is being added to the string is converted to string using its toString() method.
+```java
+public class StringConcatenationExample {
+    public static void main(String[] args) {
+       StringBuilder sb = new StringBuilder("Hello");
+        String result = sb + " World";
+        System.out.println(result);  // prints "Hello World"
+        System.out.println(result.getClass()); // class java.lang.String
+    }
+}// Output: Hello World
+```

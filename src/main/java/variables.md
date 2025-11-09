@@ -45,3 +45,13 @@ var + self-reference:
 You cannot use var if the variable appears in its own initializer (self-reference).
 
 ❌ var x = (x = 3) * 4; // illegal self reference (type inference can’t proceed)
+
+
+### Comma separated numbers not allowed
+You cannot write a comma separated number in java. For instance:
+
+```java
+int number = 1,000,000; // Compilation error
+int number1 = 1000000; // Correct
+int number2 = 1_000_000; // Also correct
+```

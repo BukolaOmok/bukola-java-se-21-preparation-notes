@@ -95,6 +95,7 @@ public class VarCompoundDeclaration {
 }
 ```
 
+### Int promotion in char addition
 When two characters are added together, they are promoted to int before the addition takes place and the result is an int.
 This is the same for char + int.
 ```java
@@ -104,6 +105,39 @@ public class CharAddition {
         char c2 = 'B'; // ASCII value 66
         int sum = c1 + c2; // Promoted to int before addition
         System.out.println("Sum of 'A' and 'B': " + sum); // Output: 131
+    }
+}
+```
+
+### Comparison between primitive and its wrapper type, and different Wrapper Types
+When an int and an Integer are compared using ==, the Integer is unboxed to an int before the comparison.
+```java
+public class IntIntegerComparison {
+    public static void main(String[] args) {
+        int primitiveInt = 100;
+        Integer wrapperInteger = 100;
+
+        if (primitiveInt == wrapperInteger) { // wrapperInteger is unboxed to int
+            System.out.println("They are equal.");
+        } else {
+            System.out.println("They are not equal.");
+        }
+    }
+}
+// Output: They are equal.
+```
+However when a Short is compared to an Integer, it results in a compilation error because they are of different types.
+```java
+public class ShortIntegerComparison {
+    public static void main(String[] args) {
+        Short shortValue = 10;
+        Integer integerValue = 10;
+
+        // if (shortValue == integerValue) { // Compilation error: incompatible types
+        //     System.out.println("They are equal.");
+        // } else {
+        //     System.out.println("They are not equal.");
+        // }
     }
 }
 ```

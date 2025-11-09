@@ -155,3 +155,24 @@ public class TestClass {
 // Output: Uncaught exception: Exception in finally block
 ```
 
+### Return in finally block overrides previous returns
+A return from a finally block overrides any previous return from the try or catch blocks.
+
+```java
+public class TestClass {
+    public static void main(String args[]) {
+        System.out.println(m1());
+    }
+
+    static int m1() {
+        try {
+            return 1;
+        } catch (Exception e) {
+            return 2;
+        } finally {
+            return 3; // This return overrides the previous returns
+        }
+    }
+}
+// Output: 3
+```

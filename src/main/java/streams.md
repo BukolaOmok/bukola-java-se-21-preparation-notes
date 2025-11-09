@@ -112,3 +112,51 @@ public class TakeDropWhileExample {
     }
 }
 ```
+
+If a sorted() method is used with an object that does not implement Comparable interface, it will throw a ClassCastException at runtime.
+```java
+import java.util.List;
+import java.util.stream.Collectors;
+public class SortedExample {
+    public static void main(String[] args) {
+        List<NonComparable> list = List.of(new NonComparable(3), new NonComparable(1), new NonComparable(2));
+
+        try {
+            List<NonComparable> sortedList = list.stream()
+                    .sorted() // This will throw ClassCastException
+                    .collect(Collectors.toList());
+        } catch (ClassCastException e) {
+            System.out.println("ClassCastException: " + e.getMessage());
+        }
+    }
+}
+class NonComparable {
+    int value;
+    NonComparable(int value) {
+        this.value = value;
+    }
+} // It will throw a class cast exception at runtime and not a compilation error.
+```
+
+### Difference between anyMatch, allMatch and noneMatch in Java Streams
+anyMatch, allMatch and nonMatch require a predicate as argument and return boolean values.
+```java
+import java.util.List;
+import java.util.function.Predicate;
+public class MatchExample {
+    public static void main(String[] args) {
+        List<Integer> numbers = List.of(2, 4, 6, 8, 10);
+
+        Predicate<Integer> isEven = n -> n % 2 == 0;
+
+        boolean anyMatchResult = numbers.stream().anyMatch(isEven);
+        System.out.println("Any Match (is even): " + anyMatchResult); // true
+
+        boolean allMatchResult = numbers.stream().allMatch(isEven);
+        System.out.println("All Match (is even): " + allMatchResult); // true
+
+        boolean noneMatchResult = numbers.stream().noneMatch(n -> n > 10);
+        System.out.println("None Match (greater than 10): " + noneMatchResult); // true
+    }
+}
+```
