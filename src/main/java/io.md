@@ -1,9 +1,7 @@
 ### Writing to a File (Replace vs Append)
 
-When you create a FileOutputStream without specifying the append mode (which can be true or false),
-it overwrites the existing file. If you want to append data to an existing file, you need to use the constructor that
-takes a boolean
-append parameter and set it to true.
+When you create a FileOutputStream without specifying the append mode (which can be true or false), it overwrites the existing file. 
+If you want to append data to an existing file, you need to use the constructor that takes a boolean append parameter and set it to true.
 
 Replace Example:
 
@@ -68,7 +66,10 @@ public static void writeInt(String fileName) throws Exception {
 
 ### File-Related Exceptions
 
-BufferedReader itself doesn’t touch the filesystem. The exception that is thrown depends on how you create it:
+BufferedReader itself doesn’t touch the filesystem. If you try to create a buffered stream/writer/reader without giving it an underlying stream/reader/writer, 
+the code won’t compile because Java can’t find a matching constructor.
+
+The exception that is thrown depends on how you create it:
 
 new BufferedReader(new FileReader("x.txt")) → FileNotFoundException (classic java.io path).
 Files.newBufferedReader(Path.of("x.txt")) → NoSuchFileException (NIO java.nio.file path).
@@ -159,3 +160,132 @@ public static void writeWithPrintWriter(String fileName) {
     }
 }
 ```
+
+#### java.io.File Constructor Argument Limits to 2 NIO doesn’t have this limit
+For java.io.File, the constructors are basically:
+
+_new File(String pathname)
+
+new File(String parent, String child)
+
+new File(File parent, String child)_
+
+So the most you ever get is a parent + child pair. You can’t do:
+
+```java
+File f =  new File("c:", "temp", "file.txt"); // ❌ won’t compile
+```
+
+because there’s no 3-argument constructor.
+
+If you want to build deeper paths with the old File API, you have to chain:
+
+```java
+File f = new File("c:\\temp", "file.txt");
+```
+or
+
+```java
+File dir = new File("c:\\temp");
+File f = new File(dir, "file.txt");
+```
+
+If you want the nice “any number of parts” style, that’s with NIO:
+
+```java
+Path p = Paths.get("c:", "temp", "file.txt"); // ✅ varargs
+```
+
+So: yes, with new File(...) you can’t have more than 2 comma-separated arguments.
+
+
+### Atomic move not supported across different file systems and with Files.copy()
+Atomic move does not work with copying across different file systems. It will throw an AtomicMoveNotSupportedException at runtime. It is only to be used with 
+move operations within the same file system. If used with Files.copy() also, it will throw an UnsupportedOperationException at runtime.
+```java
+import java.nio.file.*;
+public class AtomicMoveExample {
+    public static void main(String[] args) {
+        Path source = Paths.get("/path/to/source/file.txt");
+        Path target = Paths.get("/different/filesystem/target/file.txt");
+        try {
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException e) {
+            System.out.println("Atomic move not supported across different file systems: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage());
+        }
+    }
+}
+``` 
+
+### FileAlreadyExistsException when copying without REPLACE_EXISTING
+If a file already exists and we copy using file.copy() without StandardCopyOption.REPLACE_EXISTING, it will throw FileAlreadyExistsException at runtime.
+```java
+import java.nio.file.*;
+public class FileCopyExample {
+    public static void main(String[] args) {
+        Path source = Paths.get("/path/to/source/file.txt");
+        Path target = Paths.get("/path/to/target/file.txt");
+        try {
+            Files.copy(source, target); // without REPLACE_EXISTING
+        } catch (FileAlreadyExistsException e) {
+            System.out.println("File already exists: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage());
+        }
+    }
+}
+```
+
+### Deleting Non-Empty Directory
+To delete a directory, it must be empty. If you try to delete a non-empty directory using Files.delete(), it will throw DirectoryNotEmptyException at runtime.
+```java
+import java.nio.file.*;
+public class DirectoryDeleteExample {
+    public static void main(String[] args) {
+        Path dir = Paths.get("/path/to/non-empty-directory");
+        try {
+            Files.delete(dir);
+        } catch (DirectoryNotEmptyException e) {
+            System.out.println("Directory not empty: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage());
+        }
+    }
+}
+```
+
+###  PrintWriter and Print Stream don't have corresponding read classes
+PrintWriter and Print Stream do not have a corresponding read classes. They are only for writing data to a file or output stream. Print writer is special in that
+it can take an Output Stream or a Writer evn though both are abstract classes and cannot be used by say BufferedWriter or FileOutputStream directly.
+
+
+### Closing System.in, System.out, and System.err
+If we close system.out or system.error, no exception is thrown but any further attempts to write to these streams will be ignored silently.
+```java
+public class CloseSystemOutExample {
+    public static void main(String[] args) {
+        System.out.println("Before closing System.out");
+        System.out.close(); // Closing System.out
+        System.out.println("After closing System.out"); // This will be ignored silently
+    }
+}
+```
+However if we try to close System.in, an IOException is thrown at runtime.
+```java
+import java.io.IOException;
+public class CloseSystemInExample {
+    public static void main(String[] args) {
+        try {
+            System.in.close(); // Closing System.in
+        } catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage());
+        }
+    }
+}
+```
+
+### serialVersionUID in Serializable classes
+If you do not add a serialVersionUID to a Serializable class, the compiler generates one automatically based on various aspects of the class.
+
