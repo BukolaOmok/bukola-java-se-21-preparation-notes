@@ -1,13 +1,15 @@
 package org.example;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+
 public class Main {
         public static void main(String[] args){
-            outerLoop:
-            for(var i = 0; i< 10; i++){
-                for (var j = 0; j< 10; j++){
-                    if ( i+ j > 10 )  break outerLoop;
-                }
-                System.out.println( "hello");
-            }
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("CM");
+            var x = LocalDate.of(2001, 2, 5);
+            var y = Period.ofMonths(3).plusDays(1);
+            var z = x.plus(y);
+            System.out.println(fmt.format(z));
         }
 }

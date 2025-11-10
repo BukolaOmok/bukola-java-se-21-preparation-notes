@@ -90,6 +90,9 @@ class MyResource implements AutoCloseable {
 }
 ```
 
+Accessing a resource after it has closed will also result in a compilation error.
+
+
 ### Handling Exceptions in Static Blocks
 Exception in static block is propagated as ExceptionInInitializerError with cause set to the original exception.
 Additionally checked exceptions in static blocks must be caught or declared, otherwise a compilation error occurs.
@@ -109,32 +112,6 @@ public class TestClass {
         }
     }
 } // Output: Caught ExceptionInInitializerError: Exception in static block
-```
-
-### Try with resources requires explicit type (Compilation Error)
-When trying with resources, the type of the resources must be specified explicitly; using var is not allowed and results in a compilation error.
-You also cannot omit the type or use a resource that is not final or effectively final.
-
-```java
-public class TestClass {
-    public static void main(String args[]) {
-        try (var res = new MyResource()) { // Compilation error: 'var' is not allowed here
-            res.doSomething();
-        } catch (Exception e) {
-            System.out.println("Caught exception: " + e.getMessage());
-        }
-    }
-}
-class MyResource implements AutoCloseable {
-    public void doSomething() {
-        System.out.println("Doing something with the resource.");
-    }
-
-    @Override
-    public void close() {
-        System.out.println("Closing the resource.");
-    }
-}
 ```
 
 ### Exception in finally block suppresses previous exceptions
@@ -175,4 +152,21 @@ public class TestClass {
     }
 }
 // Output: 3
+```
+
+An exception FileNotFoundException will be thrown at run time if a file that does not exist is attempted to be read.
+
+```java
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+public class TestClass {
+    public static void main(String args[]) {
+        try {
+            FileInputStream fis = new FileInputStream("non_existent_file.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println("Caught FileNotFoundException: " + e.getMessage());
+        }
+    }
+}
+// Output: Caught FileNotFoundException: non_existent_file.txt (No such file or directory)
 ```
