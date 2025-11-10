@@ -143,7 +143,7 @@ public static void writeCharacters(String fileName) throws Exception {
 ```
 
 ###  PrintWriter Error Handling
-Printwriter's methods do not throw IO exception as they supress the errors internally. You can check for errors using checkError() method.
+Printwriter's methods do not throw IO exception as they supress the errors internally. It could have a throws IO Exception it just becomes essentially useless. You can check for errors using checkError() method.
 All it's write and print method return void so they cannot be assigned to a variable. Additionally the println and printf methods are different in that
 in printf allows for channing (i.e. you can call another method on the returned PrintWriter object) whereas println does not allow for chaining.
 The reason is that printf returns the PrintWriter object itself whereas println returns void.

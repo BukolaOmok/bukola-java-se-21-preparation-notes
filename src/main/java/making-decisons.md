@@ -114,3 +114,48 @@ public class TestClass {
         }
 }
 ```
+
+
+the enhanced switch with pattern matching is looking at the actual runtime object, not just the static reference type.
+
+Let’s unpack your code:
+
+```java
+class Exam {
+    @Override
+    public String toString() {
+        return "MyExamCloud Practice Exam";
+    }
+}
+
+public static void main(String[] args) {
+    Object o = new Exam();
+    switch (o) {
+        case null -> System.out.println("null");
+        case String s -> System.out.println("String");
+        case Exam e -> System.out.println(e.toString());
+        case int[] ia -> System.out.println("Array length" + ia.length);
+        default -> System.out.println("Something else");
+    }
+} // Output: MyExamCloud Practice Exam
+```
+
+
+The declared type is Object o.
+
+The actual object is new Exam().
+
+When the switch runs, it checks the value of o at runtime and tries the cases in order:
+
+case null → not null, skip.
+
+case String s → the object is not a String, skip.
+
+case Exam e → the object is an Exam, so this one matches.
+
+So it executes:
+
+System.out.println(e.toString());
+
+
+and because Exam.toString() returns "MyExamCloud Practice Exam", it prints:

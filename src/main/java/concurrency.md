@@ -67,3 +67,31 @@ When you interrupt a thread that is in the following states, the corresponding e
 - Runnable/New: No exception is thrown when a thread in these states is interrupted. The interrupt status of the thread is set to true, and it can be checked using the isInterrupted() method or the static interrupted() method of the Thread class.
 - Terminated: No exception is thrown when a thread in this state is interrupted, as the thread has already completed its execution.
 
+
+### Making ReentrantReadWriteLock Thread Safe
+To make lock variable thread sfe, you can make it private and final.
+```java
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+public class ThreadSafeReadWrite {
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    private int sharedResource;
+
+    public void write(int value) {
+        lock.writeLock().lock();
+        try {
+            sharedResource = value;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    public int read() {
+        lock.readLock().lock();
+        try {
+            return sharedResource;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+}
+```
