@@ -272,7 +272,7 @@ public class CloseSystemOutExample {
     }
 }
 ```
-However if we try to close System.in, an IOException is thrown at runtime.
+However if we try to close System.in, an IOException is thrown
 ```java
 import java.io.IOException;
 public class CloseSystemInExample {

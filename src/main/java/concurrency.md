@@ -17,6 +17,8 @@ For reentrant locks, below are some important points to consider:
 4. If someone is writing → everyone else must wait.
 5. The same readLock() and writeLock() objects are reused across calls.
 6. As with any lock, it is crucial to ensure that locks are released in a finally block to avoid deadlocks.
+7. If a readlock is acquired and then a writelock is attempted by the same thread, it will wait indefinitely and the system will hang.
+This is because the writelock requires exclusive access, and the readlock held by the same thread prevents it from acquiring the writelock.
 
 
 ##### Exception Handling in Synchronized Methods
@@ -69,7 +71,7 @@ When you interrupt a thread that is in the following states, the corresponding e
 
 
 ### Making ReentrantReadWriteLock Thread Safe
-To make lock variable thread sfe, you can make it private and final.
+To make lock variable thread safe, you can make it private and final.
 ```java
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ThreadSafeReadWrite {
@@ -92,6 +94,100 @@ public class ThreadSafeReadWrite {
         } finally {
             lock.readLock().unlock();
         }
+    }
+}
+```
+
+### Setting Priority of Virtual Threads in Java
+You can set the priority of platform threads but not virtual threads. The priority of virtual thread is fixed and always set to Thread.NORM_PRIORITY (which is 5).
+If you try to set the priority of a newly created virtual thread using the setPriority() method, it has no effect and the priority remains Thread.NORM_PRIORITY.
+
+```java  
+public class VirtualThreadPriorityExample {
+    public static void main(String[] args) {
+        Thread virtualThread = Thread.ofVirtual().unstarted(() -> {
+            System.out.println("Virtual Thread Priority: " + Thread.currentThread().getPriority());
+        });
+
+        // Attempting to set priority (this will have no effect)
+        virtualThread.setPriority(Thread.MAX_PRIORITY);
+
+        virtualThread.start();
+    }
+}
+```
+
+### Using .join() for threads in Java
+When you create and start a new thread (including virtual threads), the main thread may finish its execution before the newly created thread has a chance to 
+complete its task. To ensure that the main thread waits for the completion of the newly created thread, you can use the .join() method.
+
+```java
+public class ThreadJoinExample {
+    public static void main(String[] args) {
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(2000); // Simulate some work
+                System.out.println("Thread finished execution.");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        thread.start();
+
+        try {
+            thread.join(); // Main thread waits for the new thread to finish
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("Main thread finished execution.");
+    }
+}
+```
+
+
+### Using .run() vs .start() in Java Threads (Synchronous vs Asynchronous Execution)
+If a .run() is used instead of a .start(), the method will be executed in the main thread in a synchronous way. No additional thread will be created.
+
+```java
+public class ThreadRunExample {
+    public static void main(String[] args) {
+        Thread thread = new Thread(() -> {
+            System.out.println("Thread is running.");
+        });
+
+        thread.run(); // This will execute in the main thread, not a new thread
+
+        System.out.println("Main thread finished execution.");
+    }
+}
+```
+
+### Daemon Nature of Virtual Threads
+Virtual threads are daemon by nature and will not prevent the JVM from exiting when all non-daemon threads have completed their execution.
+
+
+### Executor Service Shutdown
+Executor Service declarations need to be shut down or explicitly or included in a try with resource otherwise the program may not terminate as expected.
+
+```java
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+public class ExecutorServiceExample {
+    public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        executorService.submit(() -> {
+            System.out.println("Task 1 is running.");
+        });
+
+        executorService.submit(() -> {
+            System.out.println("Task 2 is running.");
+        });
+
+        // Properly shutting down the executor service
+        executorService.shutdown();
     }
 }
 ```
